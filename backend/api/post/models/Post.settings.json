@@ -1,0 +1,73 @@
+{
+  "connection": "default",
+  "collectionName": "recipes",
+  "info": {
+    "name": "post",
+    "description": "This content is used to upload recipes"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": [
+      "created_at",
+      "updated_at"
+    ],
+    "comment": ""
+  },
+  "attributes": {
+    "post_title": {
+      "maxLength": 300,
+      "required": true,
+      "type": "string",
+      "unique": true
+    },
+    "post_content": {
+      "required": true,
+      "type": "text"
+    },
+    "post_author": {
+      "model": "user",
+      "via": "posts",
+      "plugin": "users-permissions"
+    },
+    "post_featured_image": {
+      "model": "file",
+      "via": "related",
+      "plugin": "upload"
+    },
+    "postingredients": {
+      "collection": "postingredient",
+      "via": "post"
+    },
+    "post_status": {
+      "enum": [
+        "Publish",
+        "Draft"
+      ],
+      "type": "enumeration",
+      "default": "Draft",
+      "required": true
+    },
+    "comments": {
+      "collection": "comment",
+      "via": "post"
+    },
+    "post_tags": {
+      "collection": "tag",
+      "via": "tag_posts"
+    },
+    "post_category": {
+      "collection": "category",
+      "via": "posts",
+      "dominant": true
+    },
+    "post_excerpt": {
+      "maxLength": 150,
+      "required": true,
+      "minLength": 100,
+      "type": "string"
+    },
+    "post_slug": {
+      "type": "string"
+    }
+  }
+}

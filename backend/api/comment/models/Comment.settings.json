@@ -1,0 +1,45 @@
+{
+  "connection": "default",
+  "collectionName": "comments",
+  "info": {
+    "name": "comment",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": [
+      "created_at",
+      "updated_at"
+    ],
+    "comment": ""
+  },
+  "attributes": {
+    "Content": {
+      "type": "text"
+    },
+    "comment": {
+      "model": "comment",
+      "via": "comments"
+    },
+    "comments": {
+      "collection": "comment",
+      "via": "comment"
+    },
+    "comment_date": {
+      "type": "date"
+    },
+    "comment_status": {
+      "default": "Approved",
+      "enum": [
+        "Approved",
+        "Pending Approval",
+        "Rejected"
+      ],
+      "type": "enumeration"
+    },
+    "post": {
+      "model": "post",
+      "via": "comments"
+    }
+  }
+}

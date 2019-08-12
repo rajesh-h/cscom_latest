@@ -1,0 +1,26 @@
+{
+  "connection": "default",
+  "collectionName": "postingredients",
+  "info": {
+    "name": "postingredient",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "comment": ""
+  },
+  "attributes": {
+    "ingredient": {
+      "model": "ingredient",
+      "via": "postingredients"
+    },
+    "ingredient_unit": {
+      "type": "string"
+    },
+    "post": {
+      "model": "post",
+      "via": "postingredients"
+    }
+  }
+}

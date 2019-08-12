@@ -1,0 +1,52 @@
+<template>
+  <div>
+    Hello
+    {{ post }}
+  </div>
+</template>
+
+<script>
+import axios from "axios";
+export default {
+  data() {
+    return {
+      blogUrl: process.env.blogUrl,
+      post: []
+    };
+  },
+  async mounted() {
+    try {
+      // console.log(this.$route.params.postSlug);
+      // const id = this.$route.params.postSlug;
+      const result = await axios({
+        method: "POST",
+        url: this.blogUrl + "/graphql",
+        data: {
+          query: `query ($id: ID!){
+  post (id: $id) {
+    id
+    post_title
+    post_excerpt
+    post_featured_image{url}
+    post_content
+    post_category{category_name}
+    postingredients{ingredient{ingredient_name}, ingredient_unit}
+    updated_at
+    post_author{username}
+    post_slug
+    
+  }
+  }`,
+          variables: {
+            id: this.$route.params.postSlug
+          }
+        }
+      });
+      this.post = result.data.data.post;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+};
+</script>
+<style></style>
