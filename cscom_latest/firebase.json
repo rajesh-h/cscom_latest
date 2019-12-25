@@ -1,0 +1,19 @@
+{
+  "hosting": {
+    "public": "public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source" : "**",
+        "run" : {
+          "serviceId" : "cscom-server",
+          "region" : "asia-northeast1"
+        }
+      }
+    ]
+  }
+}

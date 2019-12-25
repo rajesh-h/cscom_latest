@@ -1,0 +1,45 @@
+{
+  "name": "cookingshooking",
+  "version": "1.0.0",
+  "description": "Delicious Recipes at your finger tips",
+  "author": "just10minutes@gmail.com",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate",
+    "lint": "eslint --ext .js,.vue --ignore-path .gitignore ."
+  },
+  "lint-staged": {
+    "*.{js,vue}": "eslint"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "dependencies": {
+    "@nuxtjs/axios": "^5.6.0",
+    "@nuxtjs/pwa": "^3.0.0-0",
+    "firebase": "^6.4.0",
+    "moment": "^2.24.0",
+    "nuxt": "^2.0.0",
+    "vue2-editor": "https://github.com/ricardogobbosouza/vue2-editor.git#nuxt-module"
+  },
+  "devDependencies": {
+    "@nuxtjs/eslint-config": "^1.0.1",
+    "@nuxtjs/eslint-module": "^1.0.0",
+    "@nuxtjs/vuetify": "^1.0.0",
+    "babel-eslint": "^10.0.3",
+    "eslint": "^6.2.2",
+    "eslint-config-prettier": "^6.1.0",
+    "eslint-loader": "^3.0.0",
+    "eslint-plugin-nuxt": ">=0.4.2",
+    "eslint-plugin-prettier": "^3.1.0",
+    "eslint-plugin-vue": "^5.2.3",
+    "husky": "^2.6.0",
+    "lint-staged": "^8.2.1",
+    "prettier": "^1.18.2"
+  }
+}
