@@ -90,5 +90,4 @@ sw.*
 # Vim swap files
 *.swp
 
-
-/services/fireinit.js
+services/fireinit.js
