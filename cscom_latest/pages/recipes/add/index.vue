@@ -39,38 +39,46 @@
                 <v-text-field v-model="totalTime" label="Total Time" />
               </v-col>
             </v-row>
-            <h3>Steps Involved</h3>
-            <v-row
-              v-for="(step, index) in steps"
-              :key="step.name"
-              wrap
-              justify-center
-            >
-              <v-col xs="12" sm="9" md="9" lg="9" xl="9" px-3>
-                <v-textarea
-                  v-model="steps[index].text"
-                  rows="3"
-                  filled
-                  :label="steps[index].name"
-                  auto-grow
-                ></v-textarea>
-              </v-col>
-              <v-col
-                align-self="center"
-                xs="12"
-                sm="3"
-                md="3"
-                lg="3"
-                xl="3"
-                px-3
-                class="text-xs-center"
-              >
-                <ImageUpload
-                  :image-url="steps[index].stepImageUrl"
-                  @imageUploaded="steps[index].stepImageUrl = $event"
-                />
-              </v-col>
-            </v-row>
+            <v-expansion-panels>
+              <v-expansion-panel>
+                <v-expansion-panel-header
+                  >Steps Involved</v-expansion-panel-header
+                >
+                <v-expansion-panel-content>
+                  <v-row
+                    v-for="(step, index) in steps"
+                    :key="step.name"
+                    wrap
+                    justify-center
+                  >
+                    <v-col xs="12" sm="9" md="9" lg="9" xl="9" px-3>
+                      <v-textarea
+                        v-model="steps[index].text"
+                        rows="3"
+                        filled
+                        :label="steps[index].name"
+                        auto-grow
+                      ></v-textarea>
+                    </v-col>
+                    <v-col
+                      align-self="center"
+                      xs="12"
+                      sm="3"
+                      md="3"
+                      lg="3"
+                      xl="3"
+                      px-3
+                      class="text-xs-center"
+                    >
+                      <ImageUpload
+                        :image-url="steps[index].stepImageUrl"
+                        @imageUploaded="steps[index].stepImageUrl = $event"
+                      />
+                    </v-col>
+                  </v-row>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+            </v-expansion-panels>
 
             <!-- <no-ssr placeholder="Loading Your Editor...">
               <vue-editor
@@ -89,6 +97,7 @@
             <h3>Featured Image</h3>
 
             <ImageUpload
+              ref="imgUpload"
               :image-url="featuredImageUrl"
               @imageUploaded="featuredImageUrl = $event"
             />
@@ -100,30 +109,36 @@
               label="Categories"
               multiple
             ></v-select> -->
-            <h3>Categories</h3>
-
-            <v-row wrap class="smallCheckBoxes">
-              <v-col
-                v-for="item in categoriesData.categories"
-                :key="item"
-                xs="12"
-                sm="12"
-                md="4"
-                lg="4"
-                xl="4"
-                class="pa-0 ma-0"
-              >
-                <v-checkbox
-                  v-model="categories"
-                  class="smallCheckBoxes pa-0 ma-0"
-                  style="font-size:10px;"
-                  dense
-                  :label="item"
-                  :value="item"
-                  color="green"
-                ></v-checkbox>
-              </v-col>
-            </v-row>
+            <br />
+            <v-expansion-panels focusable>
+              <v-expansion-panel>
+                <v-expansion-panel-header>Categories</v-expansion-panel-header>
+                <v-expansion-panel-content>
+                  <v-row wrap class="smallCheckBoxes">
+                    <v-col
+                      v-for="item in categoriesData.categories"
+                      :key="item"
+                      xs="12"
+                      sm="12"
+                      md="4"
+                      lg="4"
+                      xl="4"
+                      class="pa-0 ma-0"
+                    >
+                      <v-checkbox
+                        v-model="categories"
+                        class="smallCheckBoxes pa-0 ma-0"
+                        style="font-size:10px;"
+                        dense
+                        :label="item"
+                        :value="item"
+                        color="green"
+                      ></v-checkbox>
+                    </v-col>
+                  </v-row>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+            </v-expansion-panels>
           </v-col>
 
           <v-col xs="12" class="text-center">
@@ -185,24 +200,27 @@ export default {
     checkbox: false,
     dataArray: {},
     categories: [],
-    // categories :
     ingredients: [],
     featured_image: '',
     ingredientList: ['Ingredient 1', 'Ingredient 2', 'Ingredient 3'],
     showCategories: true,
-    // uploadEndFeaturedImage: false,
     featuredImageUrl: '',
     featuredImageUrl2: '',
     servings: '',
     prepTime: '',
     cookTime: '',
     totalTime: '',
-    step1: '',
-    step1ImageUrl: '',
     steps: [
-      { name: 'Step 1', text: 'This is Step 1', stepImageUrl: '' },
+      { name: 'Step 1', text: '', stepImageUrl: '' },
       { name: 'Step 2', text: '', stepImageUrl: '' },
-      { name: 'Step 3', text: '', stepImageUrl: '' }
+      { name: 'Step 3', text: '', stepImageUrl: '' },
+      { name: 'Step 4', text: '', stepImageUrl: '' },
+      { name: 'Step 5', text: '', stepImageUrl: '' },
+      { name: 'Step 6', text: '', stepImageUrl: '' },
+      { name: 'Step 7', text: '', stepImageUrl: '' },
+      { name: 'Step 8', text: '', stepImageUrl: '' },
+      { name: 'Step 9', text: '', stepImageUrl: '' },
+      { name: 'Step 10', text: '', stepImageUrl: '' }
     ]
   }),
   computed: {
@@ -237,6 +255,19 @@ export default {
       this.featuredImageUrl = ''
       this.featuredImageUrl2 = ''
       this.content = ''
+      this.steps = [
+        { name: 'Step 1', text: '', stepImageUrl: '' },
+        { name: 'Step 2', text: '', stepImageUrl: '' },
+        { name: 'Step 3', text: '', stepImageUrl: '' },
+        { name: 'Step 4', text: '', stepImageUrl: '' },
+        { name: 'Step 5', text: '', stepImageUrl: '' },
+        { name: 'Step 6', text: '', stepImageUrl: '' },
+        { name: 'Step 7', text: '', stepImageUrl: '' },
+        { name: 'Step 8', text: '', stepImageUrl: '' },
+        { name: 'Step 9', text: '', stepImageUrl: '' },
+        { name: 'Step 10', text: '', stepImageUrl: '' }
+      ]
+      this.$refs.imgUpload.resetImageUpload()
       this.$refs.form.reset()
     },
     resetValidation() {
@@ -257,8 +288,11 @@ export default {
           updated: new Date(),
           categories: this.categories,
           ingredients: this.ingredients,
+          servings: this.servings,
+          prepTime: this.prepTime,
+          cookTime: this.cookTime,
+          totalTime: this.totalTime,
           featured_image: this.featuredImageUrl,
-          featured_image2: this.featuredImageUrl2,
           content: this.content,
           steps: this.steps
         }
@@ -269,6 +303,14 @@ export default {
         this.reset()
       }
     }
+    // getDataFromChild(param1, param2) {
+    //   // eslint-disable-next-line no-console
+    //   console.log('Calling from child component')
+    //   // eslint-disable-next-line no-console
+    //   console.log(param1)
+    //   this.featuredImageUrl = param1
+    //   this.featuredImageUploadEnd = param2
+    // }
   }
 }
 </script>

@@ -50,6 +50,10 @@ export default {
       type: String,
       default: ''
     }
+    // uploading: {
+    //   type: Boolean,
+    //   default: false
+    // }
   },
   data: () => ({
     progressUpload: 0,
@@ -57,7 +61,8 @@ export default {
     uploadTask: '',
     uploading: false,
     uploadEnd: false,
-    imageUrlAfterUpload: ''
+    imageUrlAfterUpload: '',
+    uploadEndAfterUpload: false
   }),
 
   watch: {
@@ -109,6 +114,10 @@ export default {
           console.error(`file delete error occured: ${error}`)
         })
       // this.$refs.form.reset()
+    },
+    resetImageUpload() {
+      this.uploading = false
+      this.uploadEnd = false
     }
   }
 }
