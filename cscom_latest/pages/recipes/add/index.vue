@@ -16,7 +16,7 @@
               :counter="150"
               :rules="titleRules"
               label="Slug"
-              disabled
+              :disabled="!editSlug"
               placeholer="Auto Populate"
             />
             <v-textarea
@@ -39,6 +39,51 @@
                 <v-text-field v-model="totalTime" label="Total Time" />
               </v-col>
             </v-row>
+
+            <v-expansion-panels>
+              <v-expansion-panel>
+                <v-expansion-panel-header>Ingredients</v-expansion-panel-header>
+                <v-expansion-panel-content>
+                  <v-row
+                    v-for="(ingredient, index) in ingredients"
+                    :key="index"
+                    wrap
+                    justify-center
+                  >
+                    <v-col xs="12" sm="9" md="9" lg="9" xl="9" px-3>
+                      <v-text-field
+                        v-model="ingredients[index]"
+                        :counter="200"
+                        :label="'Ingredient ' + (index + 1)"
+                        required
+                      />
+                    </v-col>
+
+                    <v-btn
+                      right
+                      x-small
+                      dark
+                      color="red"
+                      @click="removeIngredient(index)"
+                    >
+                      <v-icon dark>mdi-minus</v-icon>
+                    </v-btn>
+                  </v-row>
+                  <v-btn
+                    absolute
+                    right
+                    small
+                    fab
+                    dark
+                    color="green"
+                    @click="addExtraIngredient"
+                  >
+                    <v-icon dark>mdi-plus</v-icon>
+                  </v-btn>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+            </v-expansion-panels>
+            <br />
             <v-expansion-panels>
               <v-expansion-panel>
                 <v-expansion-panel-header
@@ -47,7 +92,7 @@
                 <v-expansion-panel-content>
                   <v-row
                     v-for="(step, index) in steps"
-                    :key="step.name"
+                    :key="index"
                     wrap
                     justify-center
                   >
@@ -56,7 +101,7 @@
                         v-model="steps[index].text"
                         rows="3"
                         filled
-                        :label="steps[index].name"
+                        :label="'Step ' + (index + 1)"
                         auto-grow
                       ></v-textarea>
                     </v-col>
@@ -74,11 +119,38 @@
                         :image-url="steps[index].stepImageUrl"
                         @imageUploaded="steps[index].stepImageUrl = $event"
                       />
+                      <v-btn
+                        right
+                        x-small
+                        dark
+                        color="red"
+                        @click="removeStep(index)"
+                      >
+                        <v-icon dark>mdi-minus</v-icon>
+                      </v-btn>
                     </v-col>
                   </v-row>
+                  <v-btn
+                    absolute
+                    right
+                    small
+                    fab
+                    dark
+                    color="green"
+                    @click="addExtraStep"
+                  >
+                    <v-icon dark>mdi-plus</v-icon>
+                  </v-btn>
                 </v-expansion-panel-content>
               </v-expansion-panel>
             </v-expansion-panels>
+            <br />
+            <v-textarea
+              v-model="recipeNotes"
+              filled
+              label="Please Enter Recipe Notes"
+              auto-grow
+            ></v-textarea>
 
             <!-- <no-ssr placeholder="Loading Your Editor...">
               <vue-editor
@@ -114,9 +186,9 @@
               <v-expansion-panel>
                 <v-expansion-panel-header>Categories</v-expansion-panel-header>
                 <v-expansion-panel-content>
-                  <v-row wrap class="smallCheckBoxes">
+                  <v-row v-if="showCategories" wrap class="smallCheckBoxes">
                     <v-col
-                      v-for="item in categoriesData.categories"
+                      v-for="item in categoriesList.categories"
                       :key="item"
                       xs="12"
                       sm="12"
@@ -140,7 +212,6 @@
               </v-expansion-panel>
             </v-expansion-panels>
           </v-col>
-
           <v-col xs="12" class="text-center">
             <v-btn :disabled="!valid" color="info" @click="validate">
               Validate
@@ -165,11 +236,12 @@
 
 <script>
 import { mapActions } from 'vuex'
+// import { fetchCategories } from '@/services/functions'
 import ImageUpload from '@/components/ImageUpload'
-// import { firestorage } from '@/services/fireinit.js'
+import { StoreDB } from '@/services/fireinit.js'
 
-const getCategories = () =>
-  import('~/data/categories.json').then((m) => m.default || m)
+// const getCategories = () =>
+//   import('~/data/categories.json').then((m) => m.default || m)
 
 export default {
   name: 'AddEditRecipe',
@@ -187,50 +259,44 @@ export default {
     publish: false,
     content: '',
     titleRules: [
-      (v) => !!v || 'Title is required',
-      (v) => (v && v.length <= 150) || 'Title must be less than 150 characters'
+      (v) => !!v || 'Required',
+      (v) => (v && v.length <= 150) || 'Must be less than 150 characters'
     ],
     email: '',
     emailRules: [
-      (v) => !!v || 'E-mail is required',
-      (v) => /.+@.+/.test(v) || 'E-mail must be valid'
+      (v) => !!v || 'Required',
+      (v) => /.+@.+/.test(v) || 'Must be valid'
     ],
     select: null,
     items: ['Item 1', 'Item 2', 'Item 3', 'Item 4'],
     checkbox: false,
     dataArray: {},
+    categoriesList: [],
     categories: [],
-    ingredients: [],
+    ingredients: ['', ''],
     featured_image: '',
-    ingredientList: ['Ingredient 1', 'Ingredient 2', 'Ingredient 3'],
-    showCategories: true,
+    showCategories: false,
     featuredImageUrl: '',
     featuredImageUrl2: '',
     servings: '',
     prepTime: '',
     cookTime: '',
     totalTime: '',
-    steps: [
-      { name: 'Step 1', text: '', stepImageUrl: '' },
-      { name: 'Step 2', text: '', stepImageUrl: '' },
-      { name: 'Step 3', text: '', stepImageUrl: '' },
-      { name: 'Step 4', text: '', stepImageUrl: '' },
-      { name: 'Step 5', text: '', stepImageUrl: '' },
-      { name: 'Step 6', text: '', stepImageUrl: '' },
-      { name: 'Step 7', text: '', stepImageUrl: '' },
-      { name: 'Step 8', text: '', stepImageUrl: '' },
-      { name: 'Step 9', text: '', stepImageUrl: '' },
-      { name: 'Step 10', text: '', stepImageUrl: '' }
-    ]
+    recipeNotes: '',
+    steps: [{ text: '', stepImageUrl: '' }, { text: '', stepImageUrl: '' }],
+    editSlug: false
   }),
   computed: {
     createSlug() {
-      // `this` points to the vm instance
-      if (this.title) {
-        return this.title
-          .toLowerCase()
-          .replace(/[^\w ]+/g, '')
-          .replace(/ +/g, '-')
+      if (!this.editSlug) {
+        if (this.title) {
+          return this.title
+            .toLowerCase()
+            .replace(/[^\w ]+/g, '')
+            .replace(/ +/g, '-')
+        } else {
+          return ''
+        }
       } else {
         return ''
       }
@@ -238,11 +304,21 @@ export default {
   },
 
   async asyncData({ req }) {
-    const categoriesData = await getCategories()
+    // const categoriesData = await getCategories()
+    // // eslint-disable-next-line no-console
+    // // console.log(categoriesData)
+    // return { categoriesData }
+  },
+  async mounted() {
     // eslint-disable-next-line no-console
-    // console.log(categoriesData)
-
-    return { categoriesData }
+    await StoreDB.collection('categories')
+      .doc('categories')
+      .get()
+      .then((res) => {
+        // eslint-disable-next-line no-console
+        this.categoriesList = res.data()
+        this.showCategories = true
+      })
   },
   methods: {
     validate() {
@@ -251,22 +327,15 @@ export default {
       }
     },
     reset() {
-      this.slug = ''
+      // this.slug = ''
       this.featuredImageUrl = ''
-      this.featuredImageUrl2 = ''
-      this.content = ''
+      // this.content = ''
+      this.recipeNotes = ''
       this.steps = [
         { name: 'Step 1', text: '', stepImageUrl: '' },
-        { name: 'Step 2', text: '', stepImageUrl: '' },
-        { name: 'Step 3', text: '', stepImageUrl: '' },
-        { name: 'Step 4', text: '', stepImageUrl: '' },
-        { name: 'Step 5', text: '', stepImageUrl: '' },
-        { name: 'Step 6', text: '', stepImageUrl: '' },
-        { name: 'Step 7', text: '', stepImageUrl: '' },
-        { name: 'Step 8', text: '', stepImageUrl: '' },
-        { name: 'Step 9', text: '', stepImageUrl: '' },
-        { name: 'Step 10', text: '', stepImageUrl: '' }
+        { name: 'Step 2', text: '', stepImageUrl: '' }
       ]
+      this.ingredients = ['', '']
       this.$refs.imgUpload.resetImageUpload()
       this.$refs.form.reset()
     },
@@ -294,15 +363,29 @@ export default {
           totalTime: this.totalTime,
           featured_image: this.featuredImageUrl,
           content: this.content,
-          steps: this.steps
+          steps: this.steps,
+          recipeNotes: this.recipeNotes
         }
         e.preventDefault()
-        // this.addRecipe(this.dataArray)
+        this.addRecipe(this.dataArray)
         // eslint-disable-next-line no-console
         console.log(this.dataArray)
         this.reset()
       }
+    },
+    addExtraStep() {
+      this.steps.push({ text: '', stepImageUrl: '' })
+    },
+    removeStep(index) {
+      this.steps.splice(index, 1)
+    },
+    addExtraIngredient() {
+      this.ingredients.push('')
+    },
+    removeIngredient(index) {
+      this.ingredients.splice(index, 1)
     }
+
     // getDataFromChild(param1, param2) {
     //   // eslint-disable-next-line no-console
     //   console.log('Calling from child component')

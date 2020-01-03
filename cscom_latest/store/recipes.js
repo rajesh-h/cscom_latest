@@ -3,7 +3,8 @@ import { StoreDB } from '@/services/fireinit.js'
 
 export const state = () => ({
   recipesList: [],
-  dashBoardRecipes: []
+  dashBoardRecipes: [],
+  categories: []
 })
 
 export const getters = {
@@ -109,6 +110,23 @@ export const actions = {
       // alert(e)
       alert('Error Fetching Data, please contact Webmaster')
     }
+  },
+  async fetchCategories({ commit }) {
+    const response = StoreDB.collection('categories').doc('categories')
+    try {
+      const categoriesArray = await response.get()
+      // eslint-disable-next-line no-console
+      console.log(categoriesArray)
+      commit('setCategories', categoriesArray)
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.log(
+        'Error Fetching Data from firestore, As Precaution Error message is not printed here. Go Ahead and print error message on debug mode'
+      )
+      // console.log(e)
+      // alert(e)
+      alert('Error Fetching Data, please contact Webmaster')
+    }
   }
 }
 
@@ -116,5 +134,6 @@ export const mutations = {
   setRecipes: (state, recipesList) => (state.recipesList = recipesList),
   addRecipe: (state, recipe) => state.recipesList.unshift(recipe),
   setDashBoardRecipes: (state, dashBoardRecipes) =>
-    (state.dashBoardRecipes = dashBoardRecipes)
+    (state.dashBoardRecipes = dashBoardRecipes),
+  setCategories: (state, categories) => (state.categories = categories)
 }

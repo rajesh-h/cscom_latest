@@ -24,13 +24,13 @@
     "@nuxtjs/pwa": "^3.0.0-0",
     "firebase": "^6.4.0",
     "moment": "^2.24.0",
-    "nuxt": "^2.0.0",
+    "nuxt": "^2.11.0",
     "vue2-editor": "https://github.com/ricardogobbosouza/vue2-editor.git#nuxt-module"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config": "^1.0.1",
     "@nuxtjs/eslint-module": "^1.0.0",
-    "@nuxtjs/vuetify": "^1.0.0",
+    "@nuxtjs/vuetify": "^1.9.1",
     "babel-eslint": "^10.0.3",
     "eslint": "^6.2.2",
     "eslint-config-prettier": "^6.1.0",

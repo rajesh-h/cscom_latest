@@ -1,6 +1,6 @@
 <template>
   <v-row>
-    <NoSsr>
+    <client-only>
       <v-col v-if="!$store.state.users.user" cols="12" class="text-center">
         <login-form></login-form>
       </v-col>
@@ -37,6 +37,12 @@
             :items-per-page="5"
             class="elevation-1"
           >
+            <template v-slot:item.featured_image="{ item }">
+              <img
+                :src="item.featured_image"
+                style="width: 50px; height: 50px"
+              />
+            </template>
             <template v-slot:item.action="{ item }">
               <v-icon small @click="editItem(item.slug)">
                 mdi-pen
@@ -48,7 +54,7 @@
           </v-data-table>
         </template>
       </v-col>
-    </NoSsr>
+    </client-only>
   </v-row>
 </template>
 
@@ -73,6 +79,7 @@ export default {
       },
       { text: 'Title', value: 'title', align: 'left' },
       { text: 'Created', value: 'updated_fmt' },
+      { text: 'Published', value: 'publish' },
       { text: 'Actions', value: 'action', sortable: false }
     ]
   }),

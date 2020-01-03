@@ -2,7 +2,7 @@
   <v-row justify-center align-center>
     <v-col xs="12" sm="8">
       <div class="mt-5">
-        <div v-if="!$store.state.user">
+        <div v-if="!$store.state.users.user">
           <login-form></login-form>
         </div>
         <div v-else class="flexWrapper align-center">
