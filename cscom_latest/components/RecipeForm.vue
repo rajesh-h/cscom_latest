@@ -11,14 +11,35 @@
               label="Title"
               required
             />
-            <v-text-field
-              :value="createSlug"
-              :counter="150"
-              :rules="textFieldRules"
-              label="Slug"
-              disabled
-              placeholer="Auto Populate"
-            />
+            <v-row wrap>
+              <v-col xs="10" sm="10" md="10" lg="10" xl="10" px-3>
+                <v-text-field
+                  v-if="!editSlug"
+                  :value="createSlug"
+                  :counter="150"
+                  :rules="textFieldRules"
+                  label="Slug"
+                  :disabled="!editSlug"
+                  placeholer="Auto Populate"
+                />
+                <v-text-field
+                  v-if="editSlug"
+                  v-model="recipeArray.slug"
+                  :counter="150"
+                  :rules="textFieldRules"
+                  label="Slug"
+                  placeholer="Auto Populate"
+                />
+              </v-col>
+              <v-col xs="2" sm="2" md="2" lg="2" xl="2" px-3>
+                <v-switch
+                  v-model="editSlug"
+                  class="mx-2"
+                  label="Edit Slug"
+                  color="green"
+                ></v-switch>
+              </v-col>
+            </v-row>
             <v-textarea
               v-model="recipeArray.content"
               filled
@@ -117,12 +138,21 @@
                   >
                     <v-col xs="12" sm="9" md="9" lg="9" xl="9" px-3>
                       <v-textarea
-                        v-model="recipeArray.steps[index].text"
+                        v-model="step.text"
                         rows="3"
                         filled
                         :label="'Step ' + (index + 1)"
                         auto-grow
                       ></v-textarea>
+                      <v-btn
+                        text
+                        icon
+                        small
+                        color="red"
+                        @click="removeStep(index)"
+                      >
+                        <v-icon dark>mdi-minus-box</v-icon>REMOVE ABOVE STEP
+                      </v-btn>
                     </v-col>
                     <v-col
                       align-self="center"
@@ -135,20 +165,21 @@
                       class="text-xs-center"
                     >
                       <ImageUpload
+                        v-for="(img, ind) in recipeArray.steps[index]
+                          .stepImageUrl"
+                        :key="ind"
                         ref="stepImgUpload"
-                        :image-url="recipeArray.steps[index].stepImageUrl"
-                        @imageUploaded="
-                          recipeArray.steps[index].stepImageUrl = $event
-                        "
+                        :image-url="img.url"
+                        @imageUploaded="img.url = $event"
                       />
                       <v-btn
-                        right
-                        x-small
-                        dark
-                        color="red"
-                        @click="removeStep(index)"
+                        text
+                        icon
+                        small
+                        color="green"
+                        @click="addExtraStepImage(index)"
                       >
-                        <v-icon dark>mdi-minus</v-icon>
+                        <v-icon dark>mdi-plus-box</v-icon>ADD MORE IMAGES
                       </v-btn>
                     </v-col>
                   </v-row>
@@ -175,7 +206,11 @@
             ></v-textarea>
           </v-col>
           <v-col xs="12" sm="12" md="4" lg="4" xl="4" px-3>
-            <v-switch v-model="recipeArray.publish" label="Publish"></v-switch>
+            <v-switch
+              v-model="recipeArray.publish"
+              label="Publish"
+              color="green"
+            ></v-switch>
             <h3>Featured Image</h3>
 
             <ImageUpload
@@ -264,7 +299,10 @@ export default {
         { measurement: '', ingredient: '' },
         { measurement: '', ingredient: '' }
       ],
-      steps: [{ text: '', stepImageUrl: '' }, { text: '', stepImageUrl: '' }],
+      steps: [
+        { text: '', stepImageUrl: [{ url: '' }] },
+        { text: '', stepImageUrl: [{ url: '' }] }
+      ],
       recipeNotes: '',
       publish: false,
       featuredImage: '',
@@ -275,17 +313,18 @@ export default {
     textFieldRules: [
       (v) => !!v || 'Required',
       (v) => (v && v.length <= 150) || 'Must be less than 150 characters'
-    ]
+    ],
+    editSlug: false
   }),
   computed: {
     createSlug() {
-      if (this.recipeArray.title) {
+      if (!this.editSlug && this.recipeArray.title) {
         return this.recipeArray.title
           .toLowerCase()
           .replace(/[^\w ]+/g, '')
           .replace(/ +/g, '-')
       } else {
-        return ''
+        return this.recipeArray.slug
       }
     }
   },
@@ -326,7 +365,10 @@ export default {
           { measurement: '', ingredient: '' },
           { measurement: '', ingredient: '' }
         ],
-        steps: [{ text: '', stepImageUrl: '' }, { text: '', stepImageUrl: '' }],
+        steps: [
+          { text: '', stepImageUrl: [{ url: '' }] },
+          { text: '', stepImageUrl: [{ url: '' }] }
+        ],
         recipeNotes: '',
         publish: false,
         featured_image: '',
@@ -342,6 +384,9 @@ export default {
     }),
     onSubmit(e) {
       if (this.$refs.form.validate()) {
+        if (!this.editSlug) {
+          this.recipeArray.slug = this.createSlug
+        }
         e.preventDefault()
         this.addRecipe(this.recipeArray)
         // eslint-disable-next-line no-console
@@ -350,7 +395,7 @@ export default {
       }
     },
     addExtraStep() {
-      this.recipeArray.steps.push({ text: '', stepImageUrl: '' })
+      this.recipeArray.steps.push({ text: '', stepImageUrl: [{ url: '' }] })
     },
     removeStep(index) {
       this.recipeArray.steps.splice(index, 1)
@@ -360,6 +405,9 @@ export default {
     },
     removeIngredient(index) {
       this.recipeArray.ingredients.splice(index, 1)
+    },
+    addExtraStepImage(index) {
+      this.recipeArray.steps[index].stepImageUrl.push({ url: '' })
     }
   }
 }

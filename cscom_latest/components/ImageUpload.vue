@@ -1,10 +1,15 @@
 <template>
   <div>
-    <v-btn v-if="!uploadEnd && !uploading" my-4 @click.native="selectFile">
-      Upload Image
-      <v-icon right aria-hidden="true">
-        mdi-add_a_photo
-      </v-icon>
+    <v-btn
+      v-if="!uploadEnd && !uploading"
+      text
+      icon
+      small
+      color="green"
+      my-4
+      @click.native="selectFile"
+    >
+      <v-icon dark>mdi-upload</v-icon>UPLOAD IMAGE
     </v-btn>
 
     <input
@@ -28,12 +33,18 @@
     >
       {{ progressUpload }}%
     </v-progress-circular>
-    <img v-if="uploadEnd" :src="imageUrl" width="50%" />
-    <div v-if="uploadEnd" mb-4>
-      <v-btn class="ma-0" dark small color="error" @click="deleteImage()">
-        Delete
-      </v-btn>
-    </div>
+    <v-row align="center" fill-height wrap>
+      <v-col xs="9" sm="9" md="9" lg="9" xl="9" px-3>
+        <img v-if="uploadEnd" :src="imageUrl" width="100%" />
+      </v-col>
+      <v-col xs="3" sm="3" md="3" lg="3" xl="3" px-3>
+        <div v-if="uploadEnd" mb-4>
+          <v-btn text icon small color="red" @click="deleteImage()">
+            <v-icon dark>mdi-delete</v-icon>
+          </v-btn>
+        </div>
+      </v-col>
+    </v-row>
   </div>
 </template>
 <script>
