@@ -3,7 +3,7 @@
     <v-col cols="12">
       <v-form ref="form" v-model="valid" lazy-validation>
         <v-row wrap>
-          <v-col xs="12" sm="12" md="8" lg="8" xl="8" px-3>
+          <v-col cols="12" sm="12" md="8" lg="8" xl="8" px-3>
             <v-text-field
               v-model="recipeArray.title"
               :counter="150"
@@ -12,7 +12,7 @@
               required
             />
             <v-row wrap>
-              <v-col xs="10" sm="10" md="10" lg="10" xl="10" px-3>
+              <v-col cols="10" sm="10" md="10" lg="10" xl="10" px-3>
                 <v-text-field
                   v-if="!editSlug"
                   :value="createSlug"
@@ -31,7 +31,7 @@
                   placeholer="Auto Populate"
                 />
               </v-col>
-              <v-col xs="2" sm="2" md="2" lg="2" xl="2" px-3>
+              <v-col cols="2" sm="2" md="2" lg="2" xl="2" px-3>
                 <v-switch
                   v-model="editSlug"
                   class="mx-2"
@@ -48,27 +48,25 @@
             ></v-textarea>
             <v-text-field
               v-model="recipeArray.youtubeUrl"
-              :counter="150"
-              :rules="textFieldRules"
               label="YouTube Url"
             />
             <v-row wrap>
-              <v-col xs="6" sm="6" md="3" lg="3" xl="3" px-3>
-                <v-text-field v-model="recipeArray.servings" label="Servings" />
+              <v-col cols="6" sm="6" md="3" lg="3" xl="3" px-3>
+                <v-text-field v-model="recipeArray.serves" label="Serves" />
               </v-col>
-              <v-col xs="6" sm="6" md="3" lg="3" xl="3" px-3>
+              <v-col cols="6" sm="6" md="3" lg="3" xl="3" px-3>
                 <v-text-field
                   v-model="recipeArray.prepTime"
                   label="Prep Time"
                 />
               </v-col>
-              <v-col xs="6" sm="6" md="3" lg="3" xl="3" px-3>
+              <v-col cols="6" sm="6" md="3" lg="3" xl="3" px-3>
                 <v-text-field
                   v-model="recipeArray.cookTime"
                   label="Cook Time"
                 />
               </v-col>
-              <v-col xs="6" sm="6" md="3" lg="3" xl="3" px-3>
+              <v-col cols="6" sm="6" md="3" lg="3" xl="3" px-3>
                 <v-text-field
                   v-model="recipeArray.totalTime"
                   label="Total Time"
@@ -80,46 +78,9 @@
               <v-expansion-panel>
                 <v-expansion-panel-header>Ingredients</v-expansion-panel-header>
                 <v-expansion-panel-content>
-                  <v-row
-                    v-for="(ingredient, index) in recipeArray.ingredients"
-                    :key="index"
-                    wrap
-                    justify-center
-                  >
-                    <v-col xs="5" sm="5" md="3" lg="3" xl="3" px-3>
-                      <v-text-field
-                        v-model="ingredient.measurement"
-                        :label="'Measurement ' + (index + 1)"
-                      />
-                    </v-col>
-                    <v-col xs="5" sm="5" md="6" lg="6" xl="6" px-3>
-                      <v-text-field
-                        v-model="ingredient.ingredient"
-                        :label="'Ingredient ' + (index + 1)"
-                      />
-                    </v-col>
-
-                    <v-btn
-                      right
-                      x-small
-                      dark
-                      color="red"
-                      @click="removeIngredient(index)"
-                    >
-                      <v-icon dark>mdi-minus</v-icon>
-                    </v-btn>
-                  </v-row>
-                  <v-btn
-                    absolute
-                    right
-                    small
-                    fab
-                    dark
-                    color="green"
-                    @click="addExtraIngredient"
-                  >
-                    <v-icon dark>mdi-plus</v-icon>
-                  </v-btn>
+                  <RecipeIngredients
+                    :recipe-ingredients="recipeArray.ingredients"
+                  />
                 </v-expansion-panel-content>
               </v-expansion-panel>
             </v-expansion-panels>
@@ -130,70 +91,10 @@
                   >Steps Involved</v-expansion-panel-header
                 >
                 <v-expansion-panel-content>
-                  <v-row
-                    v-for="(step, index) in recipeArray.steps"
-                    :key="index"
-                    wrap
-                    justify-center
-                  >
-                    <v-col xs="12" sm="9" md="9" lg="9" xl="9" px-3>
-                      <v-textarea
-                        v-model="step.text"
-                        rows="3"
-                        filled
-                        :label="'Step ' + (index + 1)"
-                        auto-grow
-                      ></v-textarea>
-                      <v-btn
-                        text
-                        icon
-                        small
-                        color="red"
-                        @click="removeStep(index)"
-                      >
-                        <v-icon dark>mdi-minus-box</v-icon>REMOVE ABOVE STEP
-                      </v-btn>
-                    </v-col>
-                    <v-col
-                      align-self="center"
-                      xs="12"
-                      sm="3"
-                      md="3"
-                      lg="3"
-                      xl="3"
-                      px-3
-                      class="text-xs-center"
-                    >
-                      <ImageUpload
-                        v-for="(img, ind) in recipeArray.steps[index]
-                          .stepImageUrl"
-                        :key="ind"
-                        ref="stepImgUpload"
-                        :image-url="img.url"
-                        @imageUploaded="img.url = $event"
-                      />
-                      <v-btn
-                        text
-                        icon
-                        small
-                        color="green"
-                        @click="addExtraStepImage(index)"
-                      >
-                        <v-icon dark>mdi-plus-box</v-icon>ADD MORE IMAGES
-                      </v-btn>
-                    </v-col>
-                  </v-row>
-                  <v-btn
-                    absolute
-                    right
-                    small
-                    fab
-                    dark
-                    color="green"
-                    @click="addExtraStep"
-                  >
-                    <v-icon dark>mdi-plus</v-icon>
-                  </v-btn>
+                  <RecipeSteps
+                    ref="recipeStepsComponent"
+                    :recipe-steps="recipeArray.recipeSteps"
+                  />
                 </v-expansion-panel-content>
               </v-expansion-panel>
             </v-expansion-panels>
@@ -205,7 +106,7 @@
               auto-grow
             ></v-textarea>
           </v-col>
-          <v-col xs="12" sm="12" md="4" lg="4" xl="4" px-3>
+          <v-col cols="12" sm="12" md="4" lg="4" xl="4" px-3>
             <v-switch
               v-model="recipeArray.publish"
               label="Publish"
@@ -228,7 +129,7 @@
                     <v-col
                       v-for="item in categoriesList.categories"
                       :key="item"
-                      xs="12"
+                      cols="12"
                       sm="12"
                       md="4"
                       lg="4"
@@ -250,7 +151,7 @@
               </v-expansion-panel>
             </v-expansion-panels>
           </v-col>
-          <v-col xs="12" class="text-center">
+          <v-col cols="12" class="text-center">
             <v-btn :disabled="!valid" color="info" @click="validate">
               Validate
             </v-btn>
@@ -275,12 +176,16 @@
 <script>
 import { mapActions } from 'vuex'
 import ImageUpload from '@/components/ImageUpload'
+import RecipeSteps from '@/components/RecipeSteps'
+import RecipeIngredients from '@/components/RecipeIngredients'
 import { StoreDB } from '@/services/fireinit.js'
 
 export default {
   name: 'RecipeForm',
   components: {
-    ImageUpload
+    ImageUpload,
+    RecipeSteps,
+    RecipeIngredients
   },
   props: {},
   data: () => ({
@@ -291,22 +196,39 @@ export default {
       slug: '',
       content: '',
       youtubeUrl: '',
-      servings: '',
+      serves: '',
       prepTime: '',
       cookTime: '',
       totalTime: '',
       ingredients: [
-        { measurement: '', ingredient: '' },
-        { measurement: '', ingredient: '' }
+        {
+          group: {
+            name: '',
+            ingredients: [
+              { ingredient: '', quantity: '' },
+              { ingredient: '', quantity: '' }
+            ]
+          }
+        }
       ],
-      steps: [
-        { text: '', stepImageUrl: [{ url: '' }] },
-        { text: '', stepImageUrl: [{ url: '' }] }
+      recipeSteps: [
+        {
+          group: {
+            name: '',
+            steps: [
+              { text: '', stepImageUrl: '' },
+              { text: '', stepImageUrl: '' }
+            ]
+          }
+        }
       ],
       recipeNotes: '',
       publish: false,
       featuredImage: '',
-      categories: []
+      categories: [],
+      created: '',
+      updated: '',
+      author: 'Yaman Agarwal'
     },
     categoriesList: [],
     showCategories: false,
@@ -348,31 +270,46 @@ export default {
     },
     reset() {
       // Reset Steps images
-      this.recipeArray.steps.forEach((value, index) => {
-        this.$refs.stepImgUpload[index].resetImageUpload()
-      })
 
+      this.$refs.recipeStepsComponent.resetImageUploadOnsteps()
       this.$refs.imgUpload.resetImageUpload()
       this.recipeArray = {
         title: '',
         slug: '',
         content: '',
-        servings: '',
+        serves: '',
         prepTime: '',
         cookTime: '',
         totalTime: '',
         ingredients: [
-          { measurement: '', ingredient: '' },
-          { measurement: '', ingredient: '' }
+          {
+            group: {
+              name: '',
+              ingredients: [
+                { ingredient: '', quantity: '' },
+                { ingredient: '', quantity: '' }
+              ]
+            }
+          }
         ],
-        steps: [
-          { text: '', stepImageUrl: [{ url: '' }] },
-          { text: '', stepImageUrl: [{ url: '' }] }
+        recipeSteps: [
+          {
+            group: {
+              name: '',
+              steps: [
+                { text: '', stepImageUrl: '' },
+                { text: '', stepImageUrl: '' }
+              ]
+            }
+          }
         ],
         recipeNotes: '',
         publish: false,
-        featured_image: '',
-        categories: []
+        featuredImage: '',
+        categories: [],
+        created: '',
+        updated: '',
+        author: 'Yaman Agarwal'
       }
       this.$refs.form.reset()
     },
@@ -387,27 +324,16 @@ export default {
         if (!this.editSlug) {
           this.recipeArray.slug = this.createSlug
         }
+        if (!this.recipeArray.created) {
+          this.recipeArray.created = Date.now()
+        }
+        this.recipeArray.updated = Date.now()
         e.preventDefault()
         this.addRecipe(this.recipeArray)
         // eslint-disable-next-line no-console
         console.log(this.recipeArray)
         // this.reset()
       }
-    },
-    addExtraStep() {
-      this.recipeArray.steps.push({ text: '', stepImageUrl: [{ url: '' }] })
-    },
-    removeStep(index) {
-      this.recipeArray.steps.splice(index, 1)
-    },
-    addExtraIngredient() {
-      this.recipeArray.ingredients.push({ measurement: '', ingredient: '' })
-    },
-    removeIngredient(index) {
-      this.recipeArray.ingredients.splice(index, 1)
-    },
-    addExtraStepImage(index) {
-      this.recipeArray.steps[index].stepImageUrl.push({ url: '' })
     }
   }
 }
