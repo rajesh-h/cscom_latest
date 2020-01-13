@@ -1,11 +1,11 @@
 <template>
   <v-toolbar color="transparent" flat style="flex:0;" height="80px">
-    <v-toolbar-title>
+    <v-toolbar-title style="padding:0px">
       <nuxt-link
         tag="img"
         :src="require('~/assets/images/logo.png')"
         to="/"
-        style="cursor:pointer; padding-top:5px"
+        style="cursor:pointer; padding-top:5px;margin-left:-10px"
       ></nuxt-link>
     </v-toolbar-title>
     <v-spacer />
@@ -26,9 +26,4 @@ export default {
 }
 </script>
 
-<style scoped>
-.v-toolbar__title a {
-  color: inherit;
-  text-decoration: none;
-}
-</style>
+<style lang="sass" scoped></style>

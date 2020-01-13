@@ -18,7 +18,14 @@ export default {
         content: process.env.npm_package_description || ''
       }
     ],
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
+    link: [
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      {
+        rel: 'stylesheet',
+        href: 'https://fonts.googleapis.com/css?family=Montserrat&display=swap'
+      }
+      // { rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/4.4.95/css/materialdesignicons.min.css' }
+    ]
   },
   /*
    ** Customize the progress-bar color
@@ -32,7 +39,8 @@ export default {
    ** Plugins to load before mounting the App
    */
   plugins: [
-    '~/plugins/fireauth.js'
+    '~/plugins/fireauth.js',
+    '~/plugins/TiptapVuetify'
     // { src: '~/plugins/vue2-editor', ssr: false }
     // { src: '~/plugins/quill', ssr: false }
   ],
@@ -51,7 +59,28 @@ export default {
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     '@nuxtjs/pwa',
-    'vue2-editor/nuxt'
+    'vue2-editor/nuxt',
+    [
+      'nuxt-lazy-load',
+      {
+        // These are the default values
+        // images: true,
+        // videos: true,
+        // audios: true,
+        // iframes: true,
+        directiveOnly: true
+
+        // To remove class set value to false
+        // loadedClass: 'isLoaded',
+        // appendClass: 'lazyLoad',
+
+        // observerConfig: {
+        //   rootMargin: '50px 0px 50px 0px',
+        //   threshold: 0
+        //   // See IntersectionObserver documentation
+        // }
+      }
+    ]
   ],
   /*
    ** Axios module configuration
@@ -95,10 +124,14 @@ export default {
     /*
      ** You can extend webpack config here
      */
-    extend(config, ctx) {}
+    extend(config, ctx) {},
+    transpile: ['vuetify/lib', 'tiptap-vuetify']
   },
 
   router: {
     // middleware: 'router-auth'
+  },
+  generate: {
+    routes: ['milijulisabzi-rs']
   }
 }

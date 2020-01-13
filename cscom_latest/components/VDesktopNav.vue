@@ -3,8 +3,8 @@
     <v-btn
       v-for="nav in navs"
       :key="nav.name"
-      large
       text
+      large
       :to="nav.path"
       height="50% !important"
     >
@@ -38,3 +38,11 @@ export default {
   })
 }
 </script>
+<style lang="css" scoped>
+.v-btn::before {
+    background-color: #8bc34a;
+}
+.theme--light.v-btn--active:hover::before, .theme--light.v-btn--active::before {
+    opacity:1;
+}
+</style>

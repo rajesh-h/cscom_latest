@@ -1,15 +1,12 @@
 <template>
-  <div>
-    <v-row>
+  <v-row>
+    <v-col>
       Latest Recipes
-    </v-row>
-    <v-row>
-      Search Recipes Based on categories
-    </v-row>
-    <v-row>
-      Featured Recipes
-    </v-row>
-  </div>
+      <div>
+        <nuxt-link to="mango-kesari-kulfi">mango-kesari-kulfi</nuxt-link>
+      </div>
+    </v-col>
+  </v-row>
 </template>
 
 <script>

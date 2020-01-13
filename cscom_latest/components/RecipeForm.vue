@@ -40,12 +40,19 @@
                 ></v-switch>
               </v-col>
             </v-row>
-            <v-textarea
-              v-model="recipeArray.content"
-              filled
-              label="Please enter Main Description/Content"
-              auto-grow
-            ></v-textarea>
+            <v-expansion-panels>
+              <v-expansion-panel>
+                <v-expansion-panel-header>Intro Text</v-expansion-panel-header>
+                <v-expansion-panel-content>
+                  <RecipeIntros
+                    ref="recipeIntrosComponent"
+                    :recipe-intros="recipeArray.recipeIntros"
+                  />
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+            </v-expansion-panels>
+            <br />
+
             <v-text-field
               v-model="recipeArray.youtubeUrl"
               label="YouTube Url"
@@ -99,12 +106,16 @@
               </v-expansion-panel>
             </v-expansion-panels>
             <br />
-            <v-textarea
-              v-model="recipeArray.recipeNotes"
-              filled
-              label="Please Enter Recipe Notes"
-              auto-grow
-            ></v-textarea>
+            <v-expansion-panels>
+              <v-expansion-panel>
+                <v-expansion-panel-header
+                  >Recipe Notes</v-expansion-panel-header
+                >
+                <v-expansion-panel-content>
+                  <Editor :content="recipeArray.recipeNotes" />
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+            </v-expansion-panels>
           </v-col>
           <v-col cols="12" sm="12" md="4" lg="4" xl="4" px-3>
             <v-switch
@@ -152,7 +163,7 @@
             </v-expansion-panels>
           </v-col>
           <v-col cols="12" class="text-center">
-            <v-btn :disabled="!valid" color="info" @click="validate">
+            <!-- <v-btn :disabled="!valid" color="info" @click="validate">
               Validate
             </v-btn>
 
@@ -162,7 +173,7 @@
 
             <v-btn color="secondary" @click="resetValidation">
               Reset Validation
-            </v-btn>
+            </v-btn> -->
             <v-btn color="primary" @click="onSubmit">
               Submit
             </v-btn>
@@ -178,6 +189,8 @@ import { mapActions } from 'vuex'
 import ImageUpload from '@/components/ImageUpload'
 import RecipeSteps from '@/components/RecipeSteps'
 import RecipeIngredients from '@/components/RecipeIngredients'
+import RecipeIntros from '@/components/RecipeIntros'
+import Editor from '@/components/Editor'
 import { StoreDB } from '@/services/fireinit.js'
 
 export default {
@@ -185,7 +198,9 @@ export default {
   components: {
     ImageUpload,
     RecipeSteps,
-    RecipeIngredients
+    RecipeIngredients,
+    RecipeIntros,
+    Editor
   },
   props: {},
   data: () => ({
@@ -194,13 +209,18 @@ export default {
     recipeArray: {
       title: '',
       slug: '',
-      content: '',
+      recipeIntros: [
+        {
+          text: '',
+          imageUrl: ''
+        }
+      ],
       youtubeUrl: '',
       serves: '',
       prepTime: '',
       cookTime: '',
       totalTime: '',
-      ingredients: [
+      recipeIngredients: [
         {
           group: {
             name: '',
@@ -270,18 +290,23 @@ export default {
     },
     reset() {
       // Reset Steps images
-
+      this.$refs.recipeIntrosComponent.resetImageUploadOnsteps()
       this.$refs.recipeStepsComponent.resetImageUploadOnsteps()
       this.$refs.imgUpload.resetImageUpload()
       this.recipeArray = {
         title: '',
         slug: '',
-        content: '',
+        recipeIntros: [
+          {
+            text: '',
+            imageUrl: ''
+          }
+        ],
         serves: '',
         prepTime: '',
         cookTime: '',
         totalTime: '',
-        ingredients: [
+        recipeIngredients: [
           {
             group: {
               name: '',
@@ -329,7 +354,7 @@ export default {
         }
         this.recipeArray.updated = Date.now()
         e.preventDefault()
-        this.addRecipe(this.recipeArray)
+        // this.addRecipe(this.recipeArray)
         // eslint-disable-next-line no-console
         console.log(this.recipeArray)
         // this.reset()

@@ -1,15 +1,15 @@
 <template>
   <v-app>
-    <v-container>
+    <v-container px-0>
       <v-site-header />
-      <v-row>
+      <!-- <v-row>
         <v-col cols="12" class="page-title" align-center>
           <h2 class="text-center">
             <v-icon large color="primary" class="pr-2">{{ pageIcon }}</v-icon>
             <span class="headline font-weight-medium">{{ pageTitle }}</span>
           </h2>
         </v-col>
-      </v-row>
+      </v-row> -->
 
       <v-site-content />
       <!-- <v-mobile-nav /> -->
@@ -69,6 +69,7 @@ export default {
 
 div#app {
   font-family: Montserrat, Roboto, sans-serif !important;
+  font-size: 14px;
 }
 .v-application .headline {
   font-family: Montserrat, Roboto, sans-serif !important;

@@ -25,6 +25,9 @@
     "firebase": "^6.4.0",
     "moment": "^2.24.0",
     "nuxt": "^2.11.0",
+    "nuxt-lazy-load": "^1.0.5",
+    "tiptap-vuetify": "^2.9.0",
+    "vue-lazy-youtube-video": "^2.0.0-beta.0",
     "vue2-editor": "https://github.com/ricardogobbosouza/vue2-editor.git#nuxt-module"
   },
   "devDependencies": {

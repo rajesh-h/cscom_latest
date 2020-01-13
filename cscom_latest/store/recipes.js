@@ -58,6 +58,7 @@ export const actions = {
       await response
         .where('publish', '==', true)
         .orderBy('created', 'desc')
+        .limit(5)
         .get()
         .then((querySnapshot) => {
           querySnapshot.forEach((doc) => {
