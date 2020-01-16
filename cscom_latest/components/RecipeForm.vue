@@ -86,7 +86,7 @@
                 <v-expansion-panel-header>Ingredients</v-expansion-panel-header>
                 <v-expansion-panel-content>
                   <RecipeIngredients
-                    :recipe-ingredients="recipeArray.ingredients"
+                    :recipe-ingredients="recipeArray.recipeIngredients"
                   />
                 </v-expansion-panel-content>
               </v-expansion-panel>
@@ -100,6 +100,7 @@
                 <v-expansion-panel-content>
                   <RecipeSteps
                     ref="recipeStepsComponent"
+                    :edit-page="editPage"
                     :recipe-steps="recipeArray.recipeSteps"
                   />
                 </v-expansion-panel-content>
@@ -112,7 +113,7 @@
                   >Recipe Notes</v-expansion-panel-header
                 >
                 <v-expansion-panel-content>
-                  <Editor :content="recipeArray.recipeNotes" />
+                  <Editor :value="recipeArray.recipeNotes" />
                 </v-expansion-panel-content>
               </v-expansion-panel>
             </v-expansion-panels>
@@ -128,6 +129,7 @@
             <ImageUpload
               ref="imgUpload"
               :image-url="recipeArray.featuredImage"
+              :edit-page="editPage"
               @imageUploaded="recipeArray.featuredImage = $event"
             />
 
@@ -161,6 +163,12 @@
                 </v-expansion-panel-content>
               </v-expansion-panel>
             </v-expansion-panels>
+            <br />
+            <v-switch
+              v-model="recipeArray.featureRecipe"
+              label="Featured Recipe"
+              color="green"
+            ></v-switch>
           </v-col>
           <v-col cols="12" class="text-center">
             <!-- <v-btn :disabled="!valid" color="info" @click="validate">
@@ -202,61 +210,75 @@ export default {
     RecipeIntros,
     Editor
   },
-  props: {},
+  props: {
+    editPage: {
+      type: Boolean,
+      default: false
+    },
+    editSlug: {
+      type: Boolean,
+      default: false
+    },
+    recipeArray: {
+      type: Object,
+      default() {
+        return {
+          title: '',
+          slug: '',
+          recipeIntros: [
+            {
+              text: '',
+              imageUrl: ''
+            }
+          ],
+          youtubeUrl: '',
+          serves: '',
+          prepTime: '',
+          cookTime: '',
+          totalTime: '',
+          recipeIngredients: [
+            {
+              group: {
+                name: '',
+                ingredients: [
+                  { ingredient: '', quantity: '' },
+                  { ingredient: '', quantity: '' }
+                ]
+              }
+            }
+          ],
+          recipeSteps: [
+            {
+              group: {
+                name: '',
+                steps: [
+                  { text: '', stepImageUrl: '' },
+                  { text: '', stepImageUrl: '' }
+                ]
+              }
+            }
+          ],
+          recipeNotes: '',
+          publish: false,
+          featuredRecipe: false,
+          featuredImage: '',
+          categories: [],
+          created: '',
+          updated: '',
+          author: 'Yaman Agarwal'
+        }
+      }
+    }
+  },
   data: () => ({
     pageTitle: 'Recipes',
     valid: true,
-    recipeArray: {
-      title: '',
-      slug: '',
-      recipeIntros: [
-        {
-          text: '',
-          imageUrl: ''
-        }
-      ],
-      youtubeUrl: '',
-      serves: '',
-      prepTime: '',
-      cookTime: '',
-      totalTime: '',
-      recipeIngredients: [
-        {
-          group: {
-            name: '',
-            ingredients: [
-              { ingredient: '', quantity: '' },
-              { ingredient: '', quantity: '' }
-            ]
-          }
-        }
-      ],
-      recipeSteps: [
-        {
-          group: {
-            name: '',
-            steps: [
-              { text: '', stepImageUrl: '' },
-              { text: '', stepImageUrl: '' }
-            ]
-          }
-        }
-      ],
-      recipeNotes: '',
-      publish: false,
-      featuredImage: '',
-      categories: [],
-      created: '',
-      updated: '',
-      author: 'Yaman Agarwal'
-    },
     categoriesList: [],
     showCategories: false,
     textFieldRules: [
       (v) => !!v || 'Required',
       (v) => (v && v.length <= 150) || 'Must be less than 150 characters'
-    ],
-    editSlug: false
+    ]
   }),
   computed: {
     createSlug() {
@@ -330,6 +352,7 @@ export default {
         ],
         recipeNotes: '',
         publish: false,
+        featuredRecipe: false,
         featuredImage: '',
         categories: [],
         created: '',
@@ -354,7 +377,11 @@ export default {
         }
         this.recipeArray.updated = Date.now()
         e.preventDefault()
-        // this.addRecipe(this.recipeArray)
+        if (!this.recipeArray.id) {
+          this.addRecipe(this.recipeArray)
+        } else {
+          this.editRecipe(this.recipeArray)
+        }
         // eslint-disable-next-line no-console
         console.log(this.recipeArray)
         // this.reset()

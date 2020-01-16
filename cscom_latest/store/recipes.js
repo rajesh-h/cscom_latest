@@ -13,7 +13,6 @@ export const getters = {
 export const actions = {
   async addRecipe({ commit, dispatch }, dataArray) {
     const response = StoreDB.collection('recipes')
-
     try {
       await response.add(dataArray).then((res) => {
         // eslint-disable-next-line no-console
@@ -31,6 +30,26 @@ export const actions = {
       return
     }
     alert('New Recipe Added.')
+  },
+  async editRecipe({ commit, dispatch }, dataArray) {
+    const response = StoreDB.collection('recipes').doc(dataArray.id)
+    try {
+      await response.set(dataArray, { merge: true }).then((res) => {
+        // eslint-disable-next-line no-console
+        // console.log('Added document with ID: ', res.id)
+        const newID = res.id // Id received from the added recipe
+        dispatch('fetchSingleRecipe', { newID }) // Pass the newID as param for this action
+      })
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.log('There was a error editing data')
+      // eslint-disable-next-line no-console
+      console.log(e)
+
+      alert(e)
+      return
+    }
+    alert('Recipe Edited.')
   },
   async fetchSingleRecipe({ commit }, { newID }) {
     // Fetch Single Recipe by passing Id
@@ -58,11 +77,18 @@ export const actions = {
       await response
         .where('publish', '==', true)
         .orderBy('created', 'desc')
-        .limit(5)
+        .limit(15)
         .get()
         .then((querySnapshot) => {
           querySnapshot.forEach((doc) => {
-            recipeArray.push({ ...doc.data(), id: doc.id }) // Using spread operator to add ID of the document to array
+            const UpdatedFmt = moment(new Date(doc.data().updated)).format(
+              'DD-MMM-YYYY hh:mm'
+            ) // date object
+            recipeArray.push({
+              ...doc.data(),
+              id: doc.id,
+              updatedFmt: UpdatedFmt
+            }) // Using spread operator to add ID of the document to array
           })
         })
       // eslint-disable-next-line no-console
@@ -88,13 +114,13 @@ export const actions = {
         .get()
         .then((querySnapshot) => {
           querySnapshot.forEach((doc) => {
-            const UpdatedFmt = moment(
-              new Date(doc.data().updated.seconds * 1000)
-            ).format('DD-MMM-YYYY hh:mm') // date object
+            const UpdatedFmt = moment(new Date(doc.data().updated)).format(
+              'DD-MMM-YYYY hh:mm'
+            ) // date object
             recipeDashBoardArray.push({
               ...doc.data(),
               id: doc.id,
-              updated_fmt: UpdatedFmt
+              updatedFmt: UpdatedFmt
             }) // Using spread operator to add ID of the document to array
           })
         })

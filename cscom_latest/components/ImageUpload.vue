@@ -35,10 +35,14 @@
     </v-progress-circular>
     <v-row align="center" fill-height wrap>
       <v-col xs="9" sm="9" md="9" lg="9" xl="9" px-3>
-        <img v-if="uploadEnd" :src="imageUrl" width="100%" />
+        <v-img
+          v-if="uploadEnd || editPage"
+          :src="imageUrl"
+          width="100%"
+        ></v-img>
       </v-col>
       <v-col xs="3" sm="3" md="3" lg="3" xl="3" px-3>
-        <div v-if="uploadEnd" mb-4>
+        <div v-if="uploadEnd || editPage" mb-4>
           <v-btn text icon small color="red" @click="deleteImage()">
             <v-icon dark>mdi-delete</v-icon>
           </v-btn>
@@ -57,6 +61,10 @@ export default {
     //   type: Boolean,
     //   default: false
     // },
+    editPage: {
+      type: Boolean,
+      default: false
+    },
     imageUrl: {
       type: String,
       default: ''

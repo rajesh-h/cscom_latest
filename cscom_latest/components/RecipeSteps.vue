@@ -48,6 +48,7 @@
             <ImageUpload
               ref="stepImgUpload"
               :image-url="step.stepImageUrl"
+              :edit-page="editPage"
               @imageUploaded="step.stepImageUrl = $event"
             />
           </v-col>
@@ -79,6 +80,10 @@ export default {
     ImageUpload
   },
   props: {
+    editPage: {
+      type: Boolean,
+      default: false
+    },
     recipeSteps: {
       type: Array,
       default() {

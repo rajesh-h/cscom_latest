@@ -2,14 +2,14 @@
   <v-app>
     <v-container px-0>
       <v-site-header />
-      <!-- <v-row>
+      <v-row>
         <v-col cols="12" class="page-title" align-center>
           <h2 class="text-center">
-            <v-icon large color="primary" class="pr-2">{{ pageIcon }}</v-icon>
-            <span class="headline font-weight-medium">{{ pageTitle }}</span>
+            <v-icon normal color="primary" class="pr-2">{{ pageIcon }}</v-icon>
+            <span class="subheading font-weight-medium">{{ pageTitle }}</span>
           </h2>
         </v-col>
-      </v-row> -->
+      </v-row>
 
       <v-site-content />
       <!-- <v-mobile-nav /> -->

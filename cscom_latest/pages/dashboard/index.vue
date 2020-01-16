@@ -37,11 +37,11 @@
             :items-per-page="5"
             class="elevation-1"
           >
-            <template v-slot:item.featured_image="{ item }">
-              <img
-                :src="item.featured_image"
-                style="width: 50px; height: 50px"
-              />
+            <template v-slot:item.featuredImage="{ item }">
+              <v-img
+                :src="item.featuredImage"
+                style="width: 50px; height: auto"
+              ></v-img>
             </template>
             <template v-slot:item.action="{ item }">
               <v-icon small @click="editItem(item.slug)">
@@ -75,10 +75,10 @@ export default {
         text: 'Image',
         align: 'left',
         sortable: false,
-        value: 'featured_image'
+        value: 'featuredImage'
       },
       { text: 'Title', value: 'title', align: 'left' },
-      { text: 'Created', value: 'updated_fmt' },
+      { text: 'Updated', value: 'updatedFmt' },
       { text: 'Published', value: 'publish' },
       { text: 'Actions', value: 'action', sortable: false }
     ]
@@ -110,7 +110,7 @@ export default {
     }),
 
     editItem(slug) {
-      this.$router.push({ name: 'recipes-edit-slug', params: { slug } })
+      this.$router.push({ name: 'slug-edit', params: { slug } })
     },
 
     deleteItem(item) {
@@ -136,7 +136,7 @@ export default {
       this.close()
     },
     newRecipe() {
-      this.$router.push({ name: 'recipes-add' })
+      this.$router.push({ name: 'new' })
     }
   }
 }

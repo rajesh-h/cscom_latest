@@ -2,9 +2,10 @@
   <div>
     <!-- Use the component in the right place of the template -->
     <tiptap-vuetify
-      v-model="content"
+      :value="value"
       :extensions="extensions"
       placeholder="Write Your Content"
+      @input="$emit('input', arguments[0])"
     />
   </div>
 </template>
@@ -34,7 +35,7 @@ export default {
   // specify TiptapVuetify component in "components"
   components: { TiptapVuetify },
   props: {
-    content: {
+    value: {
       type: String,
       default: ''
     }

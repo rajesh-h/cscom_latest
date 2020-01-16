@@ -1,20 +1,19 @@
 <template>
-  <RecipeComponentSingle :recipe-array="recipeArray" :loading="loading" />
+  <RecipeForm :recipe-array="recipeArray" :edit-slug="true" :edit-page="true" />
 </template>
-<script>
-// import { mapActions } from 'vuex'
-import moment from 'moment'
-import { StoreDB } from '@/services/fireinit.js'
-import RecipeComponentSingle from '@/components/RecipeSingle'
 
+<script>
+import moment from 'moment'
+import RecipeForm from '@/components/RecipeForm'
+import { StoreDB } from '@/services/fireinit.js'
 export default {
-  name: 'Recipe',
+  name: 'EditRecipe',
+  pageTitle: 'EDIT RECIPE',
   components: {
-    RecipeComponentSingle
+    RecipeForm
   },
   data: () => ({
-    recipeArray: {},
-    loading: true
+    recipeArray: {}
   }),
   created() {
     this.fetchSingleRecipe(this.$route.params.slug)
@@ -62,3 +61,5 @@ export default {
   }
 }
 </script>
+
+<style></style>
