@@ -76,7 +76,7 @@ export const actions = {
     try {
       await response
         .where('publish', '==', true)
-        .orderBy('created', 'desc')
+        .orderBy('updated', 'desc')
         .limit(15)
         .get()
         .then((querySnapshot) => {
@@ -99,7 +99,8 @@ export const actions = {
       console.log(
         'Error Fetching Data from firestore, As Precaution Error message is not printed here. Go Ahead and print error message on debug mode'
       )
-      // console.log(e)
+      // eslint-disable-next-line no-console
+      console.log(e)
       // alert(e)
       alert('Error Fetching Data, please contact Webmaster')
     }
