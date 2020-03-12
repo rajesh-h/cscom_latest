@@ -100,7 +100,7 @@ export const actions = {
         'Error Fetching Data from firestore, As Precaution Error message is not printed here. Go Ahead and print error message on debug mode'
       )
       // eslint-disable-next-line no-console
-      console.log(e)
+      // console.log(e)
       // alert(e)
       alert('Error Fetching Data, please contact Webmaster')
     }
